@@ -4,6 +4,7 @@ import { TimeInput } from "./TimeInput";
 import { TimeControls } from "./TimeControls";
 import { KnotsConverter } from "./KnotsConverter";
 import { NavTools } from "./NavTools";
+import { ConversionTools } from "./ConversionTools";
 import { formatTime, formatTimeDecimalHours, formatTimeDecimalTenths, parseTimeString } from "@/lib/timeParser";
 import { Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -115,10 +116,11 @@ export function TimeCalculator() {
         {/* Main card */}
         <div className="main-card bg-card rounded-2xl border border-border p-4 sm:p-5 md:p-6">
           <Tabs defaultValue="time" className="space-y-4 sm:space-y-5 md:space-y-6">
-            <TabsList className="grid grid-cols-3 w-full">
+            <TabsList className="grid grid-cols-4 w-full">
               <TabsTrigger value="time">Time</TabsTrigger>
               <TabsTrigger value="speed">Speed</TabsTrigger>
               <TabsTrigger value="nav">Nav</TabsTrigger>
+              <TabsTrigger value="convert">Convert</TabsTrigger>
             </TabsList>
 
             <TabsContent value="time" className="space-y-4 sm:space-y-5 md:space-y-6">
@@ -209,6 +211,10 @@ export function TimeCalculator() {
 
             <TabsContent value="nav">
               <NavTools />
+            </TabsContent>
+
+            <TabsContent value="convert">
+              <ConversionTools />
             </TabsContent>
           </Tabs>
         </div>

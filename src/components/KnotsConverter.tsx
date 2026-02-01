@@ -11,6 +11,9 @@ type SpeedField = "knots" | "mps" | "mph" | "kph";
 const formatValue = (value: number) =>
   value.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
 
+const formatActiveValue = (value: number) =>
+  value.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 2 });
+
 const parseValue = (value: string) => {
   const normalized = value.replace(",", ".").trim();
   if (!normalized) {
@@ -91,6 +94,12 @@ export function KnotsConverter() {
     });
   };
 
+  const handleFieldBlur = (field: SpeedField) => {
+    const parsed = parseValue(values[field]);
+    if (parsed === null) return;
+    setValues((prev) => ({ ...prev, [field]: formatActiveValue(parsed) }));
+  };
+
   return (
     <div className="space-y-4 sm:space-y-5">
       <div className="grid gap-3 sm:grid-cols-2">
@@ -109,6 +118,7 @@ export function KnotsConverter() {
                 value={values[field]}
                 onChange={(event) => handleFieldChange(field, event.target.value)}
                 onFocus={() => handleFieldFocus(field)}
+                onBlur={() => handleFieldBlur(field)}
               />
             </div>
           );
