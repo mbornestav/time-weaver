@@ -6,6 +6,8 @@ import { formatTime, formatTimeDecimalHours, formatTimeDecimalTenths, parseTimeS
 import { Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { ChevronDown } from "lucide-react";
 
 type DisplayMode = "hhmm" | "decimalExact" | "decimalTenths";
 
@@ -21,6 +23,7 @@ export function TimeCalculator() {
   const [manualMinutes, setManualMinutes] = useState(0);
   const [displayMode, setDisplayMode] = useState<DisplayMode>("hhmm");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
+  const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const lastEntryRef = useRef<HistoryEntry | null>(null);
   const debounceRef = useRef<number | undefined>(undefined);
   
@@ -91,23 +94,23 @@ export function TimeCalculator() {
   }, [inputValue, manualMinutes, totalMinutes]);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4 md:p-8">
-      <div className="w-full max-w-md">
+    <div className="min-h-[100svh] bg-background flex items-center justify-center px-3 py-3 sm:px-4 md:p-6">
+      <div className="w-full max-w-[480px]">
         {/* Header */}
-        <div className="text-center mb-8">
+        <div className="text-center mb-4 sm:mb-5 md:mb-6">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 text-primary mb-4">
             <Clock className="w-7 h-7" />
           </div>
-          <h1 className="text-2xl md:text-3xl font-bold text-foreground">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
             Time Calculator
           </h1>
-          <p className="text-muted-foreground mt-2">
+          <p className="text-muted-foreground mt-1 text-sm sm:text-base">
             Add and subtract hours & minutes
           </p>
         </div>
 
         {/* Main card */}
-        <div className="main-card bg-card rounded-2xl border border-border p-6 space-y-6">
+        <div className="main-card bg-card rounded-2xl border border-border p-4 sm:p-5 md:p-6 space-y-4 sm:space-y-5 md:space-y-6">
           {/* Display */}
           <TimeDisplay
             totalMinutes={totalMinutes}
@@ -116,63 +119,77 @@ export function TimeCalculator() {
           />
 
           {/* Input */}
-          <TimeInput value={inputValue} onChange={handleInputChange} />
+          <div className="text-sm sm:text-base">
+            <TimeInput value={inputValue} onChange={handleInputChange} />
+          </div>
 
           {/* Controls */}
-          <TimeControls
-            onAddHours={handleAddHours}
-            onAddMinutes={handleAddMinutes}
-            onReset={handleReset}
-          />
+          <div className="scale-[0.95] sm:scale-100 origin-top">
+            <TimeControls
+              onAddHours={handleAddHours}
+              onAddMinutes={handleAddMinutes}
+              onReset={handleReset}
+            />
+          </div>
 
           {/* History */}
-          <div className="space-y-3">
+          <Collapsible open={isHistoryOpen} onOpenChange={setIsHistoryOpen} className="space-y-3">
             <div className="flex items-center justify-between">
               <div className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
                 History
               </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleClearHistory}
-                disabled={history.length === 0}
-              >
-                Clear
-              </Button>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={handleClearHistory}
+                  disabled={history.length === 0}
+                >
+                  Clear
+                </Button>
+                <CollapsibleTrigger asChild>
+                  <Button variant="ghost" size="sm" className="gap-1">
+                    {isHistoryOpen ? "Hide" : "Show"} ({history.length})
+                    <ChevronDown className={`h-4 w-4 transition-transform ${isHistoryOpen ? "rotate-180" : ""}`} />
+                  </Button>
+                </CollapsibleTrigger>
+              </div>
             </div>
-            <ScrollArea className="h-40 rounded-lg border border-border">
-              {history.length === 0 ? (
-                <div className="p-4 text-xs text-muted-foreground">
-                  No history yet. Entries appear automatically as you type or adjust time.
-                </div>
-              ) : (
-                <div className="divide-y divide-border">
-                  {history.map((entry) => {
-                    const expressionLabel = entry.expression || "Manual adjustments";
-                    return (
-                      <button
-                        key={entry.id}
-                        type="button"
-                        className="w-full text-left p-3 hover:bg-muted/60 transition-colors"
-                        onClick={() => handleHistorySelect(entry)}
-                      >
-                        <div className="text-sm font-medium text-foreground">
-                          {expressionLabel}
-                        </div>
-                        <div className="text-xs text-muted-foreground mt-1">
-                          {formatTime(entry.totalMinutes)} | {formatTimeDecimalHours(entry.totalMinutes)} | {formatTimeDecimalTenths(entry.totalMinutes)}
-                        </div>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </ScrollArea>
-          </div>
+            <CollapsibleContent>
+              <ScrollArea className="max-h-[22svh] sm:max-h-[25svh] rounded-lg border border-border">
+                {history.length === 0 ? (
+                  <div className="p-4 text-xs text-muted-foreground">
+                    No history yet. Entries appear automatically as you type or adjust time.
+                  </div>
+                ) : (
+                  <div className="divide-y divide-border">
+                    {history.map((entry) => {
+                      const expressionLabel = entry.expression || "Manual adjustments";
+                      return (
+                        <button
+                          key={entry.id}
+                          type="button"
+                          className="w-full text-left p-3 hover:bg-muted/60 transition-colors"
+                          onClick={() => handleHistorySelect(entry)}
+                        >
+                          <div className="text-sm font-medium text-foreground">
+                            {expressionLabel}
+                          </div>
+                          <div className="text-xs text-muted-foreground mt-1">
+                            {formatTime(entry.totalMinutes)} | {formatTimeDecimalHours(entry.totalMinutes)} | {formatTimeDecimalTenths(entry.totalMinutes)}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
+              </ScrollArea>
+            </CollapsibleContent>
+          </Collapsible>
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-muted-foreground mt-6">
+        <p className="text-center text-xs text-muted-foreground mt-4">
           Tip: Try entering <code className="bg-muted px-1.5 py-0.5 rounded">1+1:30+:45-0:15</code>
         </p>
       </div>

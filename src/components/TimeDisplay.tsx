@@ -31,7 +31,7 @@ export function TimeDisplay({ totalMinutes, mode, onModeChange }: TimeDisplayPro
   
   return (
     <div className="display-panel p-6 md:p-8 text-center">
-      <div className="flex flex-col items-center gap-3">
+      <div className="flex flex-col items-center gap-2 sm:gap-3">
         <div className="text-sm font-medium text-muted-foreground uppercase tracking-wider">
           Result
         </div>
@@ -39,7 +39,7 @@ export function TimeDisplay({ totalMinutes, mode, onModeChange }: TimeDisplayPro
           type="single"
           value={mode}
           onValueChange={(value) => value && onModeChange(value as "hhmm" | "decimalExact" | "decimalTenths")}
-          className="flex flex-wrap"
+          className="flex flex-wrap justify-center gap-1"
           aria-label="Select time format"
         >
           <ToggleGroupItem value="hhmm" size="sm">
@@ -52,7 +52,7 @@ export function TimeDisplay({ totalMinutes, mode, onModeChange }: TimeDisplayPro
             Decimal (N.NN)
           </ToggleGroupItem>
         </ToggleGroup>
-        <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground max-w-xs">
+        <div className="flex items-center justify-center gap-2 text-[11px] sm:text-xs text-muted-foreground max-w-xs">
           <p>
             Aviation time can be shown as exact decimal hours (minutes / 60) or rounded to tenths
             of an hour (6-minute blocks).
@@ -77,13 +77,13 @@ export function TimeDisplay({ totalMinutes, mode, onModeChange }: TimeDisplayPro
         </div>
       </div>
       <div 
-        className={`font-mono text-5xl md:text-6xl lg:text-7xl font-bold tracking-tight ${
+        className={`font-mono text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight ${
           isNegative ? 'text-destructive' : 'text-foreground'
         }`}
       >
         {primaryValue}
       </div>
-      <div className="text-sm text-muted-foreground mt-3 font-medium">
+      <div className="text-xs sm:text-sm text-muted-foreground mt-2 sm:mt-3 font-medium">
         {secondaryValue}
       </div>
     </div>

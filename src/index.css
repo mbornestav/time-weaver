@@ -96,6 +96,7 @@
   }
 }
 
+
 @layer components {
   .display-panel {
     @apply bg-[hsl(var(--display-bg))] border border-[hsl(var(--display-border))] rounded-xl;
