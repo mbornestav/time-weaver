@@ -90,6 +90,23 @@ export function formatTime(totalMinutes: number): string {
   return `${sign}${hours}:${mins.toString().padStart(2, '0')}`;
 }
 
+export function formatTimeDecimalHours(totalMinutes: number, fractionDigits = 2): string {
+  const isNegative = totalMinutes < 0;
+  const absMinutes = Math.abs(totalMinutes);
+  const hours = absMinutes / 60;
+  const sign = isNegative ? '-' : '';
+  return `${sign}${hours.toFixed(fractionDigits)}h`;
+}
+
+export function formatTimeDecimalTenths(totalMinutes: number): string {
+  const isNegative = totalMinutes < 0;
+  const absMinutes = Math.abs(totalMinutes);
+  const hours = absMinutes / 60;
+  const rounded = Math.round(hours * 10) / 10;
+  const sign = isNegative ? '-' : '';
+  return `${sign}${rounded.toFixed(1)}h`;
+}
+
 export function formatTimeVerbose(totalMinutes: number): string {
   const isNegative = totalMinutes < 0;
   const absMinutes = Math.abs(totalMinutes);
