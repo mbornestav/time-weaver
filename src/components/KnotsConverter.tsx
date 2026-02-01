@@ -27,8 +27,6 @@ const fieldMeta: Array<{ field: SpeedField; label: string }> = [
   { field: "kph", label: "kph" },
 ];
 
-const keypadKeys = ["7", "8", "9", "4", "5", "6", "1", "2", "3", "0", "."];
-
 export function KnotsConverter() {
   const [values, setValues] = useState<Record<SpeedField, string>>({
     knots: "",
@@ -93,22 +91,6 @@ export function KnotsConverter() {
     });
   };
 
-  const handleKeypadInput = (key: string) => {
-    const field = activeField || "knots";
-    const currentValue = values[field] ?? "";
-
-    if (key === "clear") {
-      handleFieldChange(field, "");
-      return;
-    }
-
-    if (key === "." && currentValue.includes(".")) {
-      return;
-    }
-
-    handleFieldChange(field, `${currentValue}${key}`);
-  };
-
   return (
     <div className="space-y-4 sm:space-y-5">
       <div className="grid gap-3 sm:grid-cols-2">
@@ -122,6 +104,7 @@ export function KnotsConverter() {
               <Input
                 id={id}
                 inputMode="decimal"
+                className="h-14 rounded-xl text-lg text-center"
                 placeholder={`Enter ${label.toLowerCase()}`}
                 value={values[field]}
                 onChange={(event) => handleFieldChange(field, event.target.value)}
@@ -132,28 +115,14 @@ export function KnotsConverter() {
         })}
       </div>
 
-      <div className="grid gap-2">
-        <div className="grid grid-cols-3 gap-2">
-          {keypadKeys.map((key) => (
-            <Button
-              key={key}
-              type="button"
-              variant="secondary"
-              className="h-12 text-base"
-              onClick={() => handleKeypadInput(key)}
-            >
-              {key}
-            </Button>
-          ))}
-        </div>
-        <Button type="button" variant="outline" className="h-11" onClick={() => handleKeypadInput("clear")}>
-          Clear
-        </Button>
-      </div>
-
-      <div className="text-xs text-muted-foreground">
-        Active field: <span className="font-medium text-foreground">{fieldMeta.find((item) => item.field === activeField)?.label}</span>
-      </div>
+      <Button
+        type="button"
+        variant="outline"
+        className="h-11 w-full"
+        onClick={() => handleFieldChange(activeField, "")}
+      >
+        Clear
+      </Button>
 
       <div className="text-xs text-muted-foreground">
         1 knot = 0.514444 m/s = 1.150779 mph = 1.852 kph
