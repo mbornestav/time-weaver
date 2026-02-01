@@ -28,6 +28,7 @@ export function TimeCalculator() {
   const [displayMode, setDisplayMode] = useState<DisplayMode>("hhmm");
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<"time" | "speed" | "nav" | "convert">("time");
   const lastEntryRef = useRef<HistoryEntry | null>(null);
   const debounceRef = useRef<number | undefined>(undefined);
   
@@ -109,13 +110,22 @@ export function TimeCalculator() {
             Aviation Calculator
           </h1>
           <p className="text-muted-foreground mt-1 text-sm sm:text-base">
-            Add and subtract hours & minutes
+            {activeTab === "time" && "Add and subtract hours & minutes"}
+            {activeTab === "speed" && "Convert knots to common speed units"}
+            {activeTab === "nav" && "Navigation tools for speed, time, distance, and wind"}
+            {activeTab === "convert" && "Quick aviation unit conversions"}
           </p>
         </div>
 
         {/* Main card */}
         <div className="main-card bg-card rounded-2xl border border-border p-4 sm:p-5 md:p-6">
-          <Tabs defaultValue="time" className="space-y-4 sm:space-y-5 md:space-y-6">
+          <Tabs
+            defaultValue="time"
+            className="space-y-4 sm:space-y-5 md:space-y-6"
+            onValueChange={(value) =>
+              setActiveTab(value as "time" | "speed" | "nav" | "convert")
+            }
+          >
             <TabsList className="grid grid-cols-4 w-full">
               <TabsTrigger value="time">Time</TabsTrigger>
               <TabsTrigger value="speed">Speed</TabsTrigger>
