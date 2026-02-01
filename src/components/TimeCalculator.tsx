@@ -106,7 +106,7 @@ export function TimeCalculator() {
             <Clock className="w-7 h-7" />
           </div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
-            Time Calculator
+            Aviation Calculator
           </h1>
           <p className="text-muted-foreground mt-1 text-sm sm:text-base">
             Add and subtract hours & minutes
