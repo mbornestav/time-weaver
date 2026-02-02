@@ -99,7 +99,7 @@ export function TimeCalculator() {
   }, [inputValue, manualMinutes, totalMinutes]);
 
   return (
-    <div className="min-h-[100svh] bg-background flex items-center justify-center px-3 py-3 sm:px-4 md:p-6">
+    <div className="min-h-[100svh] bg-background flex items-start justify-center px-3 py-3 sm:px-4 md:p-6">
       <div className="w-full max-w-[480px]">
         {/* Header */}
         <div className="text-center mb-4 sm:mb-5 md:mb-6">
