@@ -6,7 +6,7 @@ import { KnotsConverter } from "./KnotsConverter";
 import { NavTools } from "./NavTools";
 import { ConversionTools } from "./ConversionTools";
 import { formatTime, formatTimeDecimalHours, formatTimeDecimalTenths, parseTimeString } from "@/lib/timeParser";
-import { Clock } from "lucide-react";
+import { ArrowLeftRight, Clock, Gauge, Navigation } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
@@ -58,6 +58,10 @@ export function TimeCalculator() {
   }, []);
 
   const handleClearHistory = useCallback(() => {
+    if (debounceRef.current) {
+      window.clearTimeout(debounceRef.current);
+      debounceRef.current = undefined;
+    }
     setHistory([]);
     lastEntryRef.current = null;
   }, []);
@@ -104,7 +108,10 @@ export function TimeCalculator() {
         {/* Header */}
         <div className="text-center mb-4 sm:mb-5 md:mb-6">
           <div className="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary/10 text-primary mb-4">
-            <Clock className="w-7 h-7" />
+            {activeTab === "time" && <Clock className="w-7 h-7" />}
+            {activeTab === "speed" && <Gauge className="w-7 h-7" />}
+            {activeTab === "nav" && <Navigation className="w-7 h-7" />}
+            {activeTab === "convert" && <ArrowLeftRight className="w-7 h-7" />}
           </div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-foreground">
             Aviation Calculator
@@ -127,10 +134,22 @@ export function TimeCalculator() {
             }
           >
             <TabsList className="grid grid-cols-4 w-full">
-              <TabsTrigger value="time">Time</TabsTrigger>
-              <TabsTrigger value="speed">Speed</TabsTrigger>
-              <TabsTrigger value="nav">Nav</TabsTrigger>
-              <TabsTrigger value="convert">Convert</TabsTrigger>
+              <TabsTrigger value="time" className="gap-2">
+                <Clock className="h-4 w-4" />
+                <span>Time</span>
+              </TabsTrigger>
+              <TabsTrigger value="speed" className="gap-2">
+                <Gauge className="h-4 w-4" />
+                <span>Speed</span>
+              </TabsTrigger>
+              <TabsTrigger value="nav" className="gap-2">
+                <Navigation className="h-4 w-4" />
+                <span>Nav</span>
+              </TabsTrigger>
+              <TabsTrigger value="convert" className="gap-2">
+                <ArrowLeftRight className="h-4 w-4" />
+                <span>Convert</span>
+              </TabsTrigger>
             </TabsList>
 
             <TabsContent value="time" className="space-y-4 sm:space-y-5 md:space-y-6">

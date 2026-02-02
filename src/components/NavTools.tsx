@@ -22,12 +22,13 @@ const parseHours = (value: string) => {
   if (!normalized) return null;
   if (normalized.includes(":")) {
     const [hoursText, minutesText] = normalized.split(":");
+    const sign = hoursText.trim().startsWith("-") ? -1 : 1;
     const hours = Number.parseFloat(hoursText);
     const minutes = Number.parseFloat(minutesText);
     if (!Number.isFinite(hours) || !Number.isFinite(minutes)) {
       return null;
     }
-    return hours + minutes / 60;
+    return sign * (Math.abs(hours) + Math.abs(minutes) / 60);
   }
   return parseNumber(normalized);
 };

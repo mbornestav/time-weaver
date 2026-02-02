@@ -81,10 +81,11 @@ function parseTimeToken(token: string): number {
 }
 
 export function formatTime(totalMinutes: number): string {
-  const isNegative = totalMinutes < 0;
-  const absMinutes = Math.abs(totalMinutes);
+  const roundedTotal = Math.round(totalMinutes);
+  const isNegative = roundedTotal < 0;
+  const absMinutes = Math.abs(roundedTotal);
   const hours = Math.floor(absMinutes / 60);
-  const mins = Math.round(absMinutes % 60);
+  const mins = absMinutes % 60;
   
   const sign = isNegative ? '-' : '';
   return `${sign}${hours}:${mins.toString().padStart(2, '0')}`;
@@ -108,10 +109,11 @@ export function formatTimeDecimalTenths(totalMinutes: number): string {
 }
 
 export function formatTimeVerbose(totalMinutes: number): string {
-  const isNegative = totalMinutes < 0;
-  const absMinutes = Math.abs(totalMinutes);
+  const roundedTotal = Math.round(totalMinutes);
+  const isNegative = roundedTotal < 0;
+  const absMinutes = Math.abs(roundedTotal);
   const hours = Math.floor(absMinutes / 60);
-  const mins = Math.round(absMinutes % 60);
+  const mins = absMinutes % 60;
   
   const sign = isNegative ? '-' : '';
   const hourStr = hours === 1 ? 'hour' : 'hours';
