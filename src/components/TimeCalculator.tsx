@@ -139,7 +139,7 @@ export function TimeCalculator() {
                 <span>Time</span>
               </TabsTrigger>
               <TabsTrigger value="speed" className="gap-2">
-                <Gauge className="h-[18px] w-[18px] sm:h-4 sm:w-4" />
+                <Gauge className="h-[19px] w-[19px] sm:h-4 sm:w-4" strokeWidth={2.25} />
                 <span>Speed</span>
               </TabsTrigger>
               <TabsTrigger value="nav" className="gap-2">
@@ -147,7 +147,7 @@ export function TimeCalculator() {
                 <span>Nav</span>
               </TabsTrigger>
               <TabsTrigger value="convert" className="gap-2">
-                <ArrowLeftRight className="h-[18px] w-[18px] sm:h-4 sm:w-4" />
+                <ArrowLeftRight className="h-[19px] w-[19px] sm:h-4 sm:w-4" strokeWidth={2.25} />
                 <span>Convert</span>
               </TabsTrigger>
             </TabsList>
