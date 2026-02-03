@@ -135,19 +135,19 @@ export function TimeCalculator() {
           >
             <TabsList className="grid grid-cols-4 w-full">
               <TabsTrigger value="time" className="gap-2">
-                <Clock className="h-4 w-4" />
+                <Clock className="h-[18px] w-[18px] sm:h-4 sm:w-4" />
                 <span>Time</span>
               </TabsTrigger>
               <TabsTrigger value="speed" className="gap-2">
-                <Gauge className="h-4 w-4" />
+                <Gauge className="h-[18px] w-[18px] sm:h-4 sm:w-4" />
                 <span>Speed</span>
               </TabsTrigger>
               <TabsTrigger value="nav" className="gap-2">
-                <Navigation className="h-4 w-4" />
+                <Navigation className="h-[18px] w-[18px] sm:h-4 sm:w-4" />
                 <span>Nav</span>
               </TabsTrigger>
               <TabsTrigger value="convert" className="gap-2">
-                <ArrowLeftRight className="h-4 w-4" />
+                <ArrowLeftRight className="h-[18px] w-[18px] sm:h-4 sm:w-4" />
                 <span>Convert</span>
               </TabsTrigger>
             </TabsList>
