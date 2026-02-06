@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useCallback } from "react";
 import { TimeDisplay } from "./TimeDisplay";
 import { TimeInput } from "./TimeInput";
 import { TimeControls } from "./TimeControls";
@@ -29,8 +29,6 @@ export function TimeCalculator() {
   const [history, setHistory] = useState<HistoryEntry[]>([]);
   const [isHistoryOpen, setIsHistoryOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<"time" | "speed" | "nav" | "convert">("time");
-  const lastEntryRef = useRef<HistoryEntry | null>(null);
-  const debounceRef = useRef<number | undefined>(undefined);
   
   const parsedTime = parseTimeString(inputValue);
   const totalMinutes = parsedTime.totalMinutes + manualMinutes;
@@ -58,19 +56,13 @@ export function TimeCalculator() {
   }, []);
 
   const handleClearHistory = useCallback(() => {
-    if (debounceRef.current) {
-      window.clearTimeout(debounceRef.current);
-      debounceRef.current = undefined;
-    }
     setHistory([]);
-    lastEntryRef.current = null;
   }, []);
 
-  useEffect(() => {
-    if (!inputValue.trim() && manualMinutes === 0) {
+  const handleSaveHistory = useCallback(() => {
+    if ((!inputValue.trim() && manualMinutes === 0) || !parsedTime.isValid) {
       return;
     }
-
     const entry: HistoryEntry = {
       id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       expression: inputValue.trim(),
@@ -78,29 +70,20 @@ export function TimeCalculator() {
       totalMinutes,
     };
 
-    if (
-      lastEntryRef.current &&
-      lastEntryRef.current.expression === entry.expression &&
-      lastEntryRef.current.totalMinutes === entry.totalMinutes
-    ) {
-      return;
-    }
-
-    if (debounceRef.current) {
-      window.clearTimeout(debounceRef.current);
-    }
-
-    debounceRef.current = window.setTimeout(() => {
-      setHistory((prev) => [entry, ...prev].slice(0, 10));
-      lastEntryRef.current = entry;
-    }, 400);
-
-    return () => {
-      if (debounceRef.current) {
-        window.clearTimeout(debounceRef.current);
+    setHistory((prev) => {
+      const [latest] = prev;
+      if (
+        latest &&
+        latest.expression === entry.expression &&
+        latest.manualMinutes === entry.manualMinutes &&
+        latest.totalMinutes === entry.totalMinutes
+      ) {
+        return prev;
       }
-    };
-  }, [inputValue, manualMinutes, totalMinutes]);
+
+      return [entry, ...prev].slice(0, 10);
+    });
+  }, [inputValue, manualMinutes, parsedTime.isValid, totalMinutes]);
 
   return (
     <div className="min-h-[100svh] bg-background flex items-start justify-center px-3 py-3 sm:px-4 md:p-6">
@@ -186,6 +169,14 @@ export function TimeCalculator() {
                   </div>
                   <div className="flex items-center gap-2">
                     <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={handleSaveHistory}
+                      disabled={(!inputValue.trim() && manualMinutes === 0) || !parsedTime.isValid}
+                    >
+                      Save
+                    </Button>
+                    <Button
                       variant="ghost"
                       size="sm"
                       onClick={handleClearHistory}
@@ -205,7 +196,7 @@ export function TimeCalculator() {
                   <ScrollArea className="max-h-[22svh] sm:max-h-[25svh] rounded-lg border border-border">
                     {history.length === 0 ? (
                       <div className="p-4 text-xs text-muted-foreground">
-                        No history yet. Entries appear automatically as you type or adjust time.
+                        No history yet. Save entries manually to keep important calculations.
                       </div>
                     ) : (
                       <div className="divide-y divide-border">
