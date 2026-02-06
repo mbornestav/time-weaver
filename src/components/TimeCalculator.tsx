@@ -162,7 +162,11 @@ export function TimeCalculator() {
 
               {/* Input */}
               <div className="text-sm sm:text-base">
-                <TimeInput value={inputValue} onChange={handleInputChange} />
+                <TimeInput
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  isValid={parsedTime.isValid || !inputValue.trim()}
+                />
               </div>
 
               {/* Controls */}

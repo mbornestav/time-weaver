@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { parseDurationHours } from "@/lib/timeParser";
 
 type SolveFor = "speed" | "distance" | "time";
 
@@ -15,22 +16,6 @@ const parseNumber = (value: string) => {
   if (!normalized) return null;
   const parsed = Number.parseFloat(normalized);
   return Number.isFinite(parsed) ? parsed : null;
-};
-
-const parseHours = (value: string) => {
-  const normalized = value.trim();
-  if (!normalized) return null;
-  if (normalized.includes(":")) {
-    const [hoursText, minutesText] = normalized.split(":");
-    const sign = hoursText.trim().startsWith("-") ? -1 : 1;
-    const hours = Number.parseFloat(hoursText);
-    const minutes = Number.parseFloat(minutesText);
-    if (!Number.isFinite(hours) || !Number.isFinite(minutes)) {
-      return null;
-    }
-    return sign * (Math.abs(hours) + Math.abs(minutes) / 60);
-  }
-  return parseNumber(normalized);
 };
 
 const formatNumber = (value: number, digits = 1) =>
@@ -52,7 +37,7 @@ export function NavTools() {
   const triangleResult = useMemo(() => {
     const speedValue = parseNumber(speed);
     const distanceValue = parseNumber(distance);
-    const timeValue = parseHours(time);
+    const timeValue = parseDurationHours(time);
 
     if (solveFor === "speed" && distanceValue !== null && timeValue && timeValue > 0) {
       return { label: solveLabels.speed, value: distanceValue / timeValue, unit: "kt" };
